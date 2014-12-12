@@ -58,8 +58,6 @@ Peerittome.prototype.dropRoom = function(id) {
 			that.rooms.splice(index, 1);
 		}
 	});
-	
-	console.log(this.rooms);
 }
 
 // Gets a room from the rooms collection by a socket ID of a client
