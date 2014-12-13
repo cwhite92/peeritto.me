@@ -22,7 +22,18 @@
 		<script id="room-template" type="text/x-handlebars-template">
 			<div class="text-center">
 				<h3>Room name: {{room.id}}</h3>
-				<button class="button-primary">Join another room</button>
+				<button id="another-room" class="button-primary" onclick="peerittome.showRoomChangeForm();">Join another room</button>
+
+				<form id="room-form">
+					<div class="row">
+						<div class="nine columns">
+							<input class="u-full-width" type="text" placeholder="Type room name" id="room-name">
+						</div>
+						<div class="three columns">
+							<button class="button-primary">Join</button>
+						</div>
+					</div>
+				</form>
 			</div>
 
 			<div id="you" class="client text-center">
@@ -36,7 +47,6 @@
 					<h6>{{id}}</h6>
 				</div>
 			{{/each}}
-			
 		</script>
 
 		<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>

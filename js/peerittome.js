@@ -23,12 +23,20 @@ var Peerittome = function() {
 				that.room.addClient(client.id, client.socketId);
 			}
 		});
-console.log(that.room);
+
 		var template = Handlebars.compile(document.getElementById('room-template').innerHTML);
 		document.getElementById('content').innerHTML = template({
 			room: that.room
 		});
 	});
+}
+
+Peerittome.prototype.showRoomChangeForm = function() {
+	// Show room name form
+	document.getElementById('room-form').style.display = 'block';
+
+	// Also hide the join another room button
+	document.getElementById('another-room').style.display = 'none';
 }
 
 var peerittome = new Peerittome();
