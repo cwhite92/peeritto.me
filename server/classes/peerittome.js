@@ -9,18 +9,26 @@ var Peerittome = function() {
 	this.gibber = new Gibber();
 
 	io.on('connection', function (socket) {
-//		var roomId = that.gibber.getRandomId();
-		var roomId = 'testRoom';
-		var clientId = that.gibber.getRandomId();
+		socket.on('clientReady', function(data) {
+			var roomId = that.gibber.getRandomId();
 
-		// Create a room for this new client and add the client to it
-		that.addRoom(roomId).addClient(clientId, socket.id);
+			// Override roomId if one has been supplied by the client
+			if (typeof data !== 'undefined' && typeof data.desiredRoom !== 'undefined') {
+				var roomId = data.desiredRoom;
+			}
 
-		// Subscribe the client to this room
-		socket.join(roomId);
+			var clientId = that.gibber.getRandomId();
 
-		// Broadcast the room back to clients subscribed to this room
-		io.to(roomId).emit('roomDetails', {room: that.getRoom(roomId)});
+			// Create a room for this new client and add the client to it
+			that.addRoom(roomId).addClient(clientId, socket.id);
+
+			// Subscribe the client to this room
+			socket.join(roomId);
+
+			// Broadcast the room back to clients subscribed to this room
+			io.to(roomId).emit('roomDetails', {room: that.getRoom(roomId)});
+			console.log(that.rooms);
+		});
 
 		socket.on('disconnect', function() {
 			// Find the room this client belongs to, and then delete them from it

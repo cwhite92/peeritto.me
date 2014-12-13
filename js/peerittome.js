@@ -9,11 +9,16 @@ var Peerittome = function() {
 	document.getElementById('content').innerHTML = template();
 
 	// Make the socket connection
-	var socket = io('178.62.77.157:80');
+	this.socket = io('178.62.77.157:80');
 
-	socket.on('roomDetails', function(data) {
+	this.socket.on('connect', function() {
+		// When a connection is made notify the server that we're ready to recieve the room
+		that.socket.emit('clientReady');
+	});
+
+	this.socket.on('roomDetails', function(data) {
 		// Setup the room with the response from the server
-		that.setupRoom(data, socket);
+		that.setupRoom(data, that.socket);
 	});
 }
 
@@ -53,7 +58,7 @@ Peerittome.prototype.changeRoom = function() {
 		return false;
 	}
 
-	// TODO change room
+	this.socket.emit('clientReady', {desiredRoom: roomName});
 }
 
 var peerittome = new Peerittome();
