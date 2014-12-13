@@ -12,11 +12,18 @@ var Peerittome = function() {
 	this.socket = io('178.62.77.157:80');
 
 	this.socket.on('connect', function() {
-		// When a connection is made notify the server that we're ready to recieve the room
-		that.socket.emit('clientReady');
+		// Init PeerJS
+		// TODO: Refactor this into promises, makes it cleaner
+		that.peer = new Peer({key: 'lwjd5qra8257b9'});
+
+		that.peer.on('open', function(id) {
+			// Notify the server that we're ready to recieve the room
+			that.socket.emit('clientReady', {peerjsId: id});
+		});
 	});
 
 	this.socket.on('roomDetails', function(data) {
+		console.log(data);
 		// Setup the room with the response from the server
 		that.setupRoom(data, that.socket);
 	});
@@ -31,9 +38,9 @@ Peerittome.prototype.setupRoom = function(data, socket) {
 	// And add our own details along with the other clients in the room
 	data.room.clients.forEach(function(client) {
 		if (client.socketId == socket.io.engine.id) {
-			that.room.addYouDetails(client.id, client.socketId);
+			that.room.addYouDetails(client.id, client.socketId, client.peerjsId);
 		} else {
-			that.room.addClient(client.id, client.socketId);
+			that.room.addClient(client.id, client.socketId, client.peerjsId);
 		}
 	});
 
@@ -58,7 +65,8 @@ Peerittome.prototype.changeRoom = function() {
 		return false;
 	}
 
-	this.socket.emit('clientReady', {desiredRoom: roomName});
+	// TODO make this send peerjs id as well
+	this.socket.emit('clientReady', {desiredRoom: roomName, peerjsId: this.peer.id});
 }
 
 var peerittome = new Peerittome();

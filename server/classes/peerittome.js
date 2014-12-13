@@ -20,20 +20,23 @@ var Peerittome = function() {
 			var clientId = that.gibber.getRandomId();
 
 			// Create a room for this new client and add the client to it
-			that.addRoom(roomId).addClient(clientId, socket.id);
+			that.addRoom(roomId).addClient(clientId, socket.id, data.peerjsId);
 
 			// Subscribe the client to this room
 			socket.join(roomId);
 
 			// Broadcast the room back to clients subscribed to this room
 			io.to(roomId).emit('roomDetails', {room: that.getRoom(roomId)});
-			console.log(that.rooms);
 		});
 
 		socket.on('disconnect', function() {
 			// Find the room this client belongs to, and then delete them from it
 			var room = that.getRoomBySocketId(socket.id);
-			room.dropClient(socket.id);
+
+			// Heisenbug http://en.wikipedia.org/wiki/Heisenbug
+			if (typeof room !== 'undefined') {
+				room.dropClient(socket.id);
+			}
 
 			// Update the people subscribed to the room
 			io.to(room.id).emit('roomDetails', {room: that.getRoom(room.id)});

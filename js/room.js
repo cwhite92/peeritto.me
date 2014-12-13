@@ -11,6 +11,6 @@ Room.prototype.addYouDetails = function(id, socketId) {
 	};
 }
 
-Room.prototype.addClient = function(id, socketId) {
-	this.clients.push(new Client(id, socketId));
+Room.prototype.addClient = function(id, socketId, peerjsId) {
+	this.clients.push(new Client(id, socketId, peerjsId));
 }

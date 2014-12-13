@@ -5,8 +5,8 @@ var Room = function(id) {
 	this.clients = [];
 }
 
-Room.prototype.addClient = function(clientId, socketId) {
-	this.clients.push(new Client(clientId, socketId));
+Room.prototype.addClient = function(clientId, socketId, peerjsId) {
+	this.clients.push(new Client(clientId, socketId, peerjsId));
 	
 	return this.getClient(socketId);
 }
