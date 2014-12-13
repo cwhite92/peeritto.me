@@ -5,8 +5,8 @@ var Room = function(id) {
 	this.clients = [];
 }
 
-Room.prototype.addClient = function(socketId) {
-	this.clients.push(new Client(socketId));
+Room.prototype.addClient = function(clientId, socketId) {
+	this.clients.push(new Client(clientId, socketId));
 	
 	return this.getClient(socketId);
 }
@@ -21,11 +21,11 @@ Room.prototype.dropClient = function(socketId) {
 	});
 }
 
-Room.prototype.getClient = function(socketId) {
+Room.prototype.getClient = function(clientId) {
 	var theClient = null;
 
 	this.clients.forEach(function(client) {
-		if (client.socketId == socketId) {
+		if (client.clientId == clientId) {
 			theClient = client;
 			return;
 		}

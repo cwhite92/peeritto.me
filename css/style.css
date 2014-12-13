@@ -1,8 +1,14 @@
 body {
-	background: #435a6b;
-	color: #ffffff;
+	background: #ffffff;
+	color: #222222;
 }
 
-#loading {
-	text-align: center;
+.avatar {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+}
+
+#you {
+	margin: 20px 0px;
 }

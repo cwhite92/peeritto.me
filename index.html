@@ -2,21 +2,47 @@
 <html>
 	<head>
 		<title>Peer it to me</title>
-		
+
 		<link href="/bower_components/normalize.css/normalize.css" rel="stylesheet" type="text/css">
 		<link href="/css/skeleton.css" rel="stylesheet" type="text/css">
+		<link href="/css/utility.css" rel="stylesheet" type="text/css">
 		<link href="/css/spinner.css" rel="stylesheet" type="text/css">
 		<link href="/css/style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
-		<div class="container">
-			<div id="loading">
+		<div id="content" class="container"></div>
+
+		<script id="loading-template" type="text/x-handlebars-template">
+			<div id="loading" class="text-center">
 				<div class="loader"></div>
 				<h1>Loading...</h1>
 			</div>
-		</div>
-		
+		</script>
+
+		<script id="room-template" type="text/x-handlebars-template">
+			<div class="text-center">
+				<h3>Room name: {{room.id}}</h3>
+				<button class="button-primary">Join another room</button>
+			</div>
+
+			<div id="you" class="client text-center">
+				<img src="/img/avatar.jpg" class="avatar" alt="You">
+				<h6>{{room.you.id}}</h6>
+			</div>
+
+			{{#each room.clients}}
+				<div class="client">
+					<img src="/img/avatar.jpg" class="avatar" alt="You">
+					<h6>{{id}}</h6>
+				</div>
+			{{/each}}
+			
+		</script>
+
 		<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
+		<script src="/bower_components/handlebars/handlebars.min.js"></script>
+		<script src="/js/client.js"></script>
+		<script src="/js/room.js"></script>
 		<script src="/js/peerittome.js"></script>
 	</body>
 </html>
