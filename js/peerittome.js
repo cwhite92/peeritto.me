@@ -46,4 +46,14 @@ Peerittome.prototype.showRoomChangeForm = function() {
 	document.getElementById('another-room').style.display = 'none';
 }
 
+Peerittome.prototype.changeRoom = function() {
+	var roomName = document.getElementById('room-name').value.trim();
+
+	if (!roomName) {
+		return false;
+	}
+
+	// TODO change room
+}
+
 var peerittome = new Peerittome();
