@@ -12,22 +12,29 @@ var Peerittome = function() {
 	var socket = io('178.62.77.157:80');
 
 	socket.on('roomDetails', function(data) {
-		// We got room details from the server, create the room object
-		that.room = new Room(data.room.id);
+		// Setup the room with the response from the server
+		that.setupRoom(data, socket);
+	});
+}
 
-		// And add our own details along with the clients in the room
-		data.room.clients.forEach(function(client) {
-			if (client.socketId == socket.io.engine.id) {
-				that.room.addYouDetails(client.id, client.socketId);
-			} else {
-				that.room.addClient(client.id, client.socketId);
-			}
-		});
+Peerittome.prototype.setupRoom = function(data, socket) {
+	var that = this;
 
-		var template = Handlebars.compile(document.getElementById('room-template').innerHTML);
-		document.getElementById('content').innerHTML = template({
-			room: that.room
-		});
+	// Create new room object
+	this.room = new Room(data.room.id);
+
+	// And add our own details along with the other clients in the room
+	data.room.clients.forEach(function(client) {
+		if (client.socketId == socket.io.engine.id) {
+			that.room.addYouDetails(client.id, client.socketId);
+		} else {
+			that.room.addClient(client.id, client.socketId);
+		}
+	});
+
+	var template = Handlebars.compile(document.getElementById('room-template').innerHTML);
+	document.getElementById('content').innerHTML = template({
+		room: that.room
 	});
 }
 
