@@ -20,10 +20,13 @@ var Peerittome = function() {
 			// Notify the server that we're ready to recieve the room
 			that.socket.emit('clientReady', {peerjsId: id});
 		});
+
+		that.peer.on('connection', function(conn) {
+			that.handlePeerConnection(conn);
+		});
 	});
 
 	this.socket.on('roomDetails', function(data) {
-		console.log(data);
 		// Setup the room with the response from the server
 		that.setupRoom(data, that.socket);
 	});
@@ -67,6 +70,34 @@ Peerittome.prototype.changeRoom = function() {
 
 	// TODO make this send peerjs id as well
 	this.socket.emit('clientReady', {desiredRoom: roomName, peerjsId: this.peer.id});
+}
+
+Peerittome.prototype.handlePeerConnection = function(conn) {
+	conn.on('data', function(data) {
+		console.log("Recieved: " + data);
+	});
+}
+
+Peerittome.prototype.handleFileSelect = function(element) {
+	var that = this;
+
+	// The file the user wants to send
+	var file = element.files[0];
+	var reader = new FileReader();
+
+	reader.onload = (function(theFile) {
+		return function(e) {
+			// When we get the file data, send it using PeerJS
+			var peerId = element.parentNode.getAttribute('data-peerjsid');
+			var conn = that.peer.connect(peerId);
+
+			conn.on('open', function() {
+				conn.send(e.target.result);
+			});
+		};
+	})(file);
+
+	reader.readAsBinaryString(file);
 }
 
 var peerittome = new Peerittome();

@@ -8,6 +8,11 @@ body {
 	height: 100px;
 	border-radius: 50%;
 	cursor: pointer;
+	border: 2px solid #cccccc;
+}
+
+.avatar:hover {
+	border-color: #33c3f0;
 }
 
 #you {
@@ -16,6 +21,7 @@ body {
 
 #you .avatar {
 	cursor: auto;
+	border-color: #33c3f0;
 }
 
 #room-form {

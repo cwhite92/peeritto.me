@@ -41,12 +41,17 @@
 				<h6>{{room.you.id}}</h6>
 			</div>
 
-			{{#each room.clients}}
-				<div class="client">
-					<img src="/img/avatar.jpg" class="avatar" alt="You">
-					<h6>{{id}}</h6>
-				</div>
-			{{/each}}
+			<div class="row">
+				{{#each room.clients}}
+					<div class="four columns">
+						<div class="client text-center" data-peerjsid="{{peerjsId}}">
+							<img src="/img/avatar.jpg" class="avatar" alt="You">
+							<h6>{{id}}</h6>
+							<input type="file" id="file-{{id}}" name="file" onchange="peerittome.handleFileSelect(this);">
+						</div>
+					</div>
+				{{/each}}
+			</div>
 		</script>
 
 		<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
