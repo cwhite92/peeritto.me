@@ -102,7 +102,7 @@ Peerittome.prototype.handleFileSelect = function(element) {
 			var peerId = element.parentNode.getAttribute('data-peerjsid');
 			var conn = that.peer.connect(peerId, {
 				metadata: {
-					filename: 'helloworld.txt'
+					filename: theFile.name
 				}
 			});
 
