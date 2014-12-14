@@ -32,7 +32,12 @@ var Peerittome = function() {
 		socket.on('disconnect', function() {
 			// Find the room this client belongs to, and then delete them from it
 			var room = that.getRoomBySocketId(socket.id);
-console.log(room);
+
+			// Room can be null when a client disconnects before the server has given them a room
+			if (room === null) {
+				return;
+			}
+
 			// Heisenbug http://en.wikipedia.org/wiki/Heisenbug
 			if (typeof room !== 'undefined') {
 				room.dropClient(socket.id);

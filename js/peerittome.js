@@ -22,7 +22,7 @@ var Peerittome = function() {
 		});
 
 		that.peer.on('connection', function(conn) {
-			that.handlePeerConnection(conn);
+			that.handleIncomingFile(conn);
 		});
 	});
 
@@ -72,9 +72,20 @@ Peerittome.prototype.changeRoom = function() {
 	this.socket.emit('clientReady', {desiredRoom: roomName, peerjsId: this.peer.id});
 }
 
-Peerittome.prototype.handlePeerConnection = function(conn) {
-	conn.on('data', function(data) {
-		console.log("Recieved: " + data);
+Peerittome.prototype.handleIncomingFile = function(conn) {
+	conn.on('data', function(buffer) {
+		// Convert the binary string into a blob
+		var blob = new Blob([buffer], {type: 'octet/stream'});
+
+		// Create URL to download the blob file
+		var url = URL.createObjectURL(blob);
+
+		// Create hidden anchor and click it to initiate the download
+		a = document.createElement('a');
+		a.href = url;
+		a.download = conn.metadata.filename;
+		a.click();
+		URL.revokeObjectURL(url);
 	});
 }
 
@@ -89,15 +100,20 @@ Peerittome.prototype.handleFileSelect = function(element) {
 		return function(e) {
 			// When we get the file data, send it using PeerJS
 			var peerId = element.parentNode.getAttribute('data-peerjsid');
-			var conn = that.peer.connect(peerId);
+			var conn = that.peer.connect(peerId, {
+				metadata: {
+					filename: 'helloworld.txt'
+				}
+			});
 
 			conn.on('open', function() {
-				conn.send(e.target.result);
+				// Send the file!
+				conn.send(theFile);
 			});
 		};
 	})(file);
 
-	reader.readAsBinaryString(file);
+	reader.readAsArrayBuffer(file);
 }
 
 var peerittome = new Peerittome();
