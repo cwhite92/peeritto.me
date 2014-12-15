@@ -9,12 +9,12 @@ var Peerittome = function() {
 	document.getElementById('content').innerHTML = template();
 
 	// Make the socket connection
-	this.socket = io('178.62.77.157:80');
+	this.socket = io('http://peeritto.me/');
 
 	this.socket.on('connect', function() {
 		// Init PeerJS
 		// TODO: Refactor this into promises, makes it cleaner
-		that.peer = new Peer({key: 'lwjd5qra8257b9'});
+		that.peer = new Peer((Math.random() + 1).toString(36).substring(7), {host: 'peeritto.me', port: 443});
 
 		that.peer.on('open', function(id) {
 			// Notify the server that we're ready to recieve the room
